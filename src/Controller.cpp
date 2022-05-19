@@ -69,7 +69,27 @@ void Controller::loginUser() {
     }
 };
 
-void Controller::changePassword(){};
+void Controller::changePassword() {
+    string oldPassword;
+    cout << "请输入旧密码:";
+    cin >> oldPassword;
+    if (currentPerson->checkPassword(oldPassword)) {
+        string newPassword;
+        cout << "请输入新密码:";
+        cin >> newPassword;
+        string repeatedPassword;
+        cout << "请再次输入新密码:";
+        cin >> repeatedPassword;
+        if (newPassword == repeatedPassword) {
+            currentPerson->setPassword(newPassword);
+            cout << "密码修改成功！" << endl;
+        } else {
+            cout << "两次输入的密码不一致，请重新再试！" << endl;
+        }
+    } else {
+        cout << "密码错误，修改失败" << endl;
+    }
+};
 
 void Controller::queryBalance(){};
 
