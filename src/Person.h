@@ -33,7 +33,7 @@ class Person {
      * @brief 账户余额
      *
      */
-    int balance = 0;
+    double balance = 0;
     /**
      * @brief 用户名
      *
@@ -74,8 +74,8 @@ class Person {
     // Getter and Setter
     ////////////////////////////////////////////////////////////////////////////////
 
-    void setBalance(int balance);
-    int getBalance();
+    void setBalance(double balance);
+    double getBalance();
     void setUsername(string username);
     string getUsername();
     void setNickname(string nickname);

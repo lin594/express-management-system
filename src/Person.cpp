@@ -4,11 +4,11 @@
 #include <iostream>
 
 #include "User.h"
-void Person::setBalance(int balance) {
+void Person::setBalance(double balance) {
     this->balance = balance;
     this->save();
 }
-int Person::getBalance() { return balance; }
+double Person::getBalance() { return balance; }
 
 void Person::setUsername(string username) {
     this->username = username;

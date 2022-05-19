@@ -108,7 +108,22 @@ void Controller::queryBalance() {
     cout << "你的余额为：" << currentPerson->getBalance() << endl;
 };
 
-void Controller::recharge(){};
+void Controller::recharge() {
+    if (currentPerson == nullptr) {
+        cout << "请先登录" << endl;
+        return;
+    }
+    this->queryBalance();
+    cout << "请输入充值金额:";
+    double money;
+    cin >> money;
+    if (money > 0) {
+        currentPerson->setBalance(currentPerson->getBalance() + money);
+        cout << "充值成功！" << endl;
+    } else {
+        cout << "充值金额必须大于0！" << endl;
+    }
+};
 
 void Controller::sendExpress(){};
 
