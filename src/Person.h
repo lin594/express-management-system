@@ -81,5 +81,5 @@ class Person {
     void setNickname(string nickname);
     string getNickname();
     void setPassword(string password);
-    string getPassword();
+    bool checkPassword(string password);
 };

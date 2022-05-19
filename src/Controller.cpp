@@ -45,7 +45,29 @@ void Controller::registerUser() {
     this->addPerson(new User(username, nickname, password));
 };
 
-void Controller::loginUser(){};
+void Controller::loginUser() {
+    cout << "下面开始登录用户。" << endl << "请输入用户名:";
+    string username;
+    cin >> username;
+    int cnt = 0;
+    while (personMap.find(username) == personMap.end()) {
+        cout << "用户名不存在，请重新输入用户名:";
+        cin >> username;
+        if (++cnt > 3) {
+            cout << "输入错误次数过多，已退出" << endl;
+        }
+    }
+    cout << "请输入密码:";
+    string password;
+    cin >> password;
+    if (personMap[username]->checkPassword(password)) {
+        currentPerson = personMap[username];
+        cout << "登录成功! 欢迎你，亲爱的" << currentPerson->getNickname()
+             << endl;
+    } else {
+        cout << "密码错误，已退出" << endl;
+    }
+};
 
 void Controller::changePassword(){};
 

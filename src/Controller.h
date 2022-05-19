@@ -10,9 +10,27 @@ using std::vector;
  */
 class Controller {
    private:
+    /**
+     * @brief 用户列表
+     *
+     */
     vector<Person*> personList;
+    /**
+     * @brief 用户映射
+     *
+     */
     map<string, Person*> personMap;
+    /**
+     * @brief 增加用户
+     *
+     */
     void addPerson(Person*);
+
+    /**
+     * @brief 当前用户
+     *
+     */
+    Person* currentPerson = nullptr;
 
    public:
     /**

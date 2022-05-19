@@ -26,7 +26,9 @@ void Person::setPassword(string password) {
     this->password = password;
     this->save();
 }
-string Person::getPassword() { return password; }
+bool Person::checkPassword(string password) {
+    return this->password == password;
+}
 
 void Person::save() {
     std::ofstream out(USER_DIR + username + ".txt");
