@@ -1,0 +1,16 @@
+#include <vector>
+
+#include "Person.h"
+#include "User.h"
+using std::vector;
+/**
+ * @brief 物流公司管理员
+ *
+ */
+class Admin : public Person {
+   public:
+    /////////////////////////////////////////////////////////////////////////////
+    // Constructor
+    /////////////////////////////////////////////////////////////////////////////
+    Admin() = default;
+};
