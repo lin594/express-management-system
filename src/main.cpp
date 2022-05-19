@@ -1,6 +1,9 @@
+#include <iostream>
+
 #include "Controller.h"
+
+Controller c;
 int main() {
-    Controller c;
     c.run();
     return 0;
 }

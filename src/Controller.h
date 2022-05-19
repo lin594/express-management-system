@@ -1,20 +1,30 @@
+#include <map>
+#include <vector>
+
+#include "User.h"
+using std::map;
+using std::vector;
 /**
  * @brief 控制类
  * 控制程序的启动、关闭、更新等
  */
 class Controller {
    private:
+    vector<Person*> personList;
+    map<string, Person*> personMap;
+    void addPerson(Person*);
+
    public:
     /**
      * @brief Construct a new Controller object
      *
      */
-    Controller() = default;
+    Controller();
     /**
      * @brief Destroy the Controller object
      *
      */
-    ~Controller() = default;
+    ~Controller();
     /**
      * @brief 控制类的主函数
      * （其实是个死循环，监听各类操作
