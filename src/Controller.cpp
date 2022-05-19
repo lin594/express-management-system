@@ -32,9 +32,14 @@ void Controller::registerUser() {
     cout << "下面开始注册用户。" << endl << "请输入用户名:";
     string username;
     cin >> username;
+    int cnt = 0;
     while (personMap.find(username) != personMap.end()) {
         cout << "用户名已存在，请重新输入用户名:";
         cin >> username;
+        if (++cnt > 10) {
+            cout << "输入次数过多，请稍后再试。" << endl;
+            return;
+        }
     }
     cout << "请输入密码:";
     string password;
