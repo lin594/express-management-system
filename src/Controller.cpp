@@ -75,6 +75,10 @@ void Controller::loginUser() {
 };
 
 void Controller::changePassword() {
+    if (currentPerson == nullptr) {
+        cout << "请先登录" << endl;
+        return;
+    }
     string oldPassword;
     cout << "请输入旧密码:";
     cin >> oldPassword;
