@@ -100,7 +100,13 @@ void Controller::changePassword() {
     }
 };
 
-void Controller::queryBalance(){};
+void Controller::queryBalance() {
+    if (currentPerson == nullptr) {
+        cout << "请先登录" << endl;
+        return;
+    }
+    cout << "你的余额为：" << currentPerson->getBalance() << endl;
+};
 
 void Controller::recharge(){};
 
