@@ -1,35 +1,14 @@
 #pragma once
 #include <ctime>
 #include <fstream>
-#include <set>
 #include <string>
+
+#include "ExpressState.h"
+
 using std::ifstream;
-using std::set;
 using std::string;
 
 const string EXPRESS_DIR = "./data/express/";
-
-/**
- * @brief 快递状态枚举类型
- *
- */
-enum class ExpressState {
-    // WAITING,
-    // SENDING,
-    /**
-     * @brief 已发送
-     *
-     */
-    SENT,
-    /**
-     * @brief 已签收
-     *
-     */
-    RECEIVED,
-};
-
-const set<ExpressState> ALL_EXPRESS_STATES{ExpressState::SENT,
-                                           ExpressState::RECEIVED};
 
 /**
  * @brief 快递类
