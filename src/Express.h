@@ -1,7 +1,13 @@
+#pragma once
 #include <ctime>
+#include <fstream>
 #include <string>
 
+using std::ifstream;
 using std::string;
+
+const string EXPRESS_DIR = "./data/express/";
+
 /**
  * @brief 快递状态枚举类型
  *
@@ -27,6 +33,11 @@ enum class ExpressState {
  */
 class Express {
    private:
+    /**
+     * @brief 快递单号
+     *
+     */
+    string expressId;
     /**
      * @brief 快递状态
      *
@@ -57,30 +68,49 @@ class Express {
      *
      */
     string description;
+    /**
+     * @brief 保存快递信息到本地
+     *
+     */
+    void save();
+    /**
+     * @brief 获取保存文件的路径
+     *
+     * @return string 保存文件的路径
+     */
+    string getFilePath();
 
    public:
+    /**
+     * @brief 接收快递
+     *
+     */
+    void Receive();
+
+    /**
+     * @brief 从文件中读取快递信息
+     *
+     * @param file 文件路径
+     * @return Express* 快递指针
+     */
+    static Express* load(string file);
     ////////////////////////////////////////////////////////////////////////////////
     // Constructor
     ////////////////////////////////////////////////////////////////////////////////
 
-    Express() = default;
+    Express(ifstream& in);
+    Express(string sender, string receiver,
+            string description = "No description");
 
     ////////////////////////////////////////////////////////////////////////////////
     // Getter and Setter
     ////////////////////////////////////////////////////////////////////////////////
 
-    void setState(ExpressState state);
     ExpressState getState();
-    void setSendTime(time_t sendTime);
     time_t getSendTime();
-    void setReceiveTime(time_t receiveTime);
     time_t getReceiveTime();
-    void setSender(string sender);
     string getSender();
-    void setReceiver(string receiver);
     string getReceiver();
-    void setDescription(string description);
     string getDescription();
-    void setExpressState(ExpressState state);
-    ExpressState getExpressState();
+    string getExpressId();
 };

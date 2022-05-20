@@ -13,13 +13,29 @@ void User::setAddress(string address) {
 }
 string User::getAddress() { return address; }
 
+/**
+ * @brief 无参构造函数
+ *
+ */
 User::User() { this->type = PersonType::USER; }
 
+/**
+ * @brief 通过文件流构造函数
+ *
+ * @param in 从文件中读取的流
+ */
 User::User(ifstream& in) : Person(in) {
     in >> this->telephone;
     in >> this->address;
 }
 
+/**
+ * @brief 创建用户
+ *
+ * @param username 用户名
+ * @param nickname 姓名
+ * @param password 密码
+ */
 User::User(string username, string nickname, string password) : User{} {
     this->username = username;
     this->nickname = nickname;
@@ -35,4 +51,22 @@ void User::save() {
         out << address << std::endl;
         out.close();
     }
+}
+
+/**
+ * @brief 添加发件快递
+ *
+ * @param express 快递
+ */
+void User::addSendExpress(Express* express) {
+    this->sendExpressList.push_back(express);
+}
+
+/**
+ * @brief 添加收件快递
+ *
+ * @param express 快递
+ */
+void User::addReceiveExpress(Express* express) {
+    this->receiveExpressList.push_back(express);
 }

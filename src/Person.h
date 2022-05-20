@@ -74,6 +74,7 @@ class Person {
     // Getter and Setter
     ////////////////////////////////////////////////////////////////////////////////
 
+    PersonType getType();
     void setBalance(double balance);
     double getBalance();
     void setUsername(string username);

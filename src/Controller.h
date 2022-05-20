@@ -1,6 +1,7 @@
 #include <map>
 #include <vector>
 
+#include "Express.h"
 #include "User.h"
 using std::map;
 using std::vector;
@@ -21,16 +22,39 @@ class Controller {
      */
     map<string, Person*> personMap;
     /**
-     * @brief 增加用户
+     * @brief 快递列表
      *
      */
-    void addPerson(Person*);
+    vector<Express*> expressList;
+    /**
+     * @brief 快递映射
+     *
+     */
+    map<string, Express*> expressMap;
 
     /**
      * @brief 当前用户
      *
      */
     Person* currentPerson = nullptr;
+
+    /**
+     * @brief 增加用户
+     *
+     */
+    void addPerson(Person*);
+    /**
+     * @brief 增加快递
+     *
+     */
+    void addExpress(Express*);
+
+    /**
+     * @brief 输入合法用户名
+     *
+     * @return string 用户名
+     */
+    string inputUsername(string information = "");
 
    public:
     /**

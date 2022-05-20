@@ -1,27 +1,85 @@
 #include "Express.h"
 
-void Express::setState(ExpressState state) { this->state = state; }
+#include <iostream>
+
 ExpressState Express::getState() { return state; };
-
-void Express::setSendTime(time_t sendTime) { this->sendTime = sendTime; }
-
 time_t Express::getSendTime() { return sendTime; };
-
-void Express::setReceiveTime(time_t receiveTime) {
-    this->receiveTime = receiveTime;
-}
 time_t Express::getReceiveTime() { return receiveTime; };
-
-void Express::setSender(string sender) { this->sender = sender; }
 string Express::getSender() { return sender; };
-
-void Express::setReceiver(string receiver) { this->receiver = receiver; }
 string Express::getReceiver() { return receiver; };
-
-void Express::setDescription(string description) {
-    this->description = description;
-}
 string Express::getDescription() { return description; };
+string Express::getExpressId() { return expressId; };
+string Express::getFilePath() { return EXPRESS_DIR + expressId + ".txt"; };
 
-void Express::setExpressState(ExpressState state) { this->state = state; }
-ExpressState Express::getExpressState() { return state; };
+/**
+ * @brief Construct a new Express:: Express object
+ *
+ * @param sender 发送者
+ * @param receiver 接收者
+ * @param description 物品描述
+ */
+Express::Express(string sender, string receiver, string description) {
+    this->sender = sender;
+    this->receiver = receiver;
+    this->description = description;
+    this->state = ExpressState::SENT;
+    this->sendTime = time(nullptr);
+    this->receiveTime = 0;
+    char buf[100];
+    strftime(buf, sizeof(buf), "%Y%m%d%H%M%S", localtime(&sendTime));
+    srand(time(nullptr));
+    string id = std::to_string(rand() % 10000);
+    this->expressId = string(buf) + string(4 - id.length(), '0') + id;
+    std::cout << "快递订单 " << expressId << " 已经生成" << std::endl;
+    this->save();
+}
+
+/**
+ * @brief 通过快递单号构造快递
+ *
+ */
+Express::Express(ifstream& in) {
+    int _state;
+    in >> _state;
+    this->state = (ExpressState)_state;
+    in >> expressId >> sendTime >> receiveTime >> sender >> receiver >>
+        description;
+}
+
+Express* Express::load(string file) {
+    std::ifstream in(file);
+    if (in.is_open()) {
+        Express* express = new Express(in);
+        in.close();
+        return express;
+    }
+    return nullptr;
+}
+
+/**
+ * @brief 接收快递
+ *
+ */
+void Express::Receive() {
+    this->state = ExpressState::RECEIVED;
+    this->receiveTime = time(nullptr);
+    this->save();
+}
+
+void Express::save() {
+    std::ofstream out(this->getFilePath());
+    if (out.is_open()) {
+        out << int(state) << std::endl;
+        out << expressId << std::endl;
+        out << sendTime << std::endl;
+        out << receiveTime << std::endl;
+        out << sender << std::endl;
+        out << receiver << std::endl;
+        out << description << std::endl;
+        out.close();
+    } else {
+        std::cout << "[Express::save()]Error: Could not open file " +
+                         this->getFilePath()
+                  << std::endl;
+    }
+}

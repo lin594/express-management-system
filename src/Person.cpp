@@ -4,6 +4,8 @@
 #include <iostream>
 
 #include "User.h"
+PersonType Person::getType() { return type; }
+
 void Person::setBalance(double balance) {
     this->balance = balance;
     this->save();

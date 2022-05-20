@@ -11,8 +11,33 @@ void Controller::addPerson(Person* person) {
     personMap[person->getUsername()] = person;
 }
 
+void Controller::addExpress(Express* express) {
+    expressList.push_back(express);
+    expressMap[express->getExpressId()] = express;
+    dynamic_cast<User*>(personMap[express->getSender()])
+        ->addSendExpress(express);
+    dynamic_cast<User*>(personMap[express->getReceiver()])
+        ->addReceiveExpress(express);
+}
+
+string Controller::inputUsername(string infomation) {
+    cout << infomation;
+    string username = "";
+    cin >> username;
+    int cnt = 0;
+    while (personMap.find(username) == personMap.end()) {
+        cout << "用户名不存在，请重新输入用户名:";
+        cin >> username;
+        if (++cnt > 3) {
+            cout << "输入错误次数过多，已退出" << endl;
+        }
+    }
+    return username;
+}
+
 void Controller::run() {
     cout << "系统内现在共有" << personList.size() << "个用户" << endl;
+    cout << "系统内现在共有" << expressList.size() << "个快递" << endl;
 }
 
 Controller::Controller() {
@@ -20,11 +45,18 @@ Controller::Controller() {
         Person* person = Person::load(p.path().string());
         if (person != nullptr) this->addPerson(person);
     }
+    for (auto& p : std::filesystem::directory_iterator(EXPRESS_DIR)) {
+        Express* express = Express::load(p.path().string());
+        if (express != nullptr) this->addExpress(express);
+    }
 }
 
 Controller::~Controller() {
     for (auto person : personList) {
         delete person;
+    }
+    for (auto express : expressList) {
+        delete express;
     }
 }
 
@@ -51,17 +83,9 @@ void Controller::registerUser() {
 };
 
 void Controller::loginUser() {
-    cout << "下面开始登录用户。" << endl << "请输入用户名:";
-    string username;
-    cin >> username;
-    int cnt = 0;
-    while (personMap.find(username) == personMap.end()) {
-        cout << "用户名不存在，请重新输入用户名:";
-        cin >> username;
-        if (++cnt > 3) {
-            cout << "输入错误次数过多，已退出" << endl;
-        }
-    }
+    cout << "下面开始登录用户。" << endl;
+    string username = this->inputUsername("请输入用户名:");
+    if (!username.length()) return;
     cout << "请输入密码:";
     string password;
     cin >> password;
@@ -125,7 +149,23 @@ void Controller::recharge() {
     }
 };
 
-void Controller::sendExpress(){};
+void Controller::sendExpress() {
+    if (currentPerson == nullptr) {
+        cout << "请先登录" << endl;
+        return;
+    }
+    if (currentPerson->getType() != PersonType::USER) {
+        cout << "你不是用户，不能发送快递" << endl;
+        return;
+    }
+    string receiver = this->inputUsername("请输入收件人用户名:");
+    if (!receiver.size()) return;
+    if (personMap[receiver]->getType() != PersonType::USER) {
+        cout << "收件人不是普通用户，不能接收快递" << endl;
+        return;
+    }
+    this->addExpress(new Express(currentPerson->getUsername(), receiver));
+};
 
 void Controller::receiveExpress(){};
 
