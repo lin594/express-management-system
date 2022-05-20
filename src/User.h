@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 
 #include "Express.h"
@@ -56,4 +57,9 @@ class User : public Person {
     string getTelephone();
     void setAddress(string address);
     string getAddress();
+
+    vector<Express*> getExpressList(
+        const bool receive = true, const bool send = true,
+        const string expressId = "",
+        const set<ExpressState> states = ALL_EXPRESS_STATES);
 };

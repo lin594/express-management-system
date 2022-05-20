@@ -83,3 +83,26 @@ void Express::save() {
                   << std::endl;
     }
 }
+
+string Express::toString() {
+    string str = "快递单号: " + expressId + "\n";
+    str += "快递状态: ";
+    switch (state) {
+        case ExpressState::SENT:
+            str += "已发送";
+            break;
+        case ExpressState::RECEIVED:
+            str += "已接收";
+            break;
+        default:
+            str += "未知";
+            break;
+    }
+    str += "\n";
+    str += "寄送时间: " + string(ctime(&sendTime));
+    str += "接收时间: " + string(ctime(&receiveTime));
+    str += "寄件人: " + sender + "\n";
+    str += "收件人: " + receiver + "\n";
+    str += "物品描述: " + description + "\n";
+    return str;
+}

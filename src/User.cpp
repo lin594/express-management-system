@@ -70,3 +70,24 @@ void User::addSendExpress(Express* express) {
 void User::addReceiveExpress(Express* express) {
     this->receiveExpressList.push_back(express);
 }
+
+void searchList(vector<Express*>& result, const vector<Express*>& list,
+                const set<ExpressState>& states, const string& expressId) {
+    for (Express* express : list) {
+        if (states.count(express->getState()) == 0) continue;
+        if (expressId != "" && expressId != express->getExpressId()) continue;
+        result.push_back(express);
+    }
+}
+vector<Express*> User::getExpressList(const bool receive, const bool send,
+                                      const string expressId,
+                                      const set<ExpressState> states) {
+    vector<Express*> list;
+    if (receive) {
+        searchList(list, this->receiveExpressList, states, expressId);
+    }
+    if (send) {
+        searchList(list, this->sendExpressList, states, expressId);
+    }
+    return list;
+}

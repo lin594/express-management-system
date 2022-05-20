@@ -1,7 +1,9 @@
 #include <map>
 #include <vector>
 
+#include "Admin.h"
 #include "Express.h"
+#include "Person.h"
 #include "User.h"
 using std::map;
 using std::vector;
@@ -37,6 +39,17 @@ class Controller {
      *
      */
     Person* currentPerson = nullptr;
+
+    /**
+     * @brief 当前普通用户
+     *
+     */
+    User* currentUser = nullptr;
+    /**
+     * @brief 当前管理员
+     *
+     */
+    Admin* currentAdmin = nullptr;
 
     /**
      * @brief 增加用户
@@ -86,6 +99,11 @@ class Controller {
      *
      */
     void loginUser();
+    /**
+     * @brief 用户退出
+     *
+     */
+    void logoutUser();
     /**
      * @brief 用户修改密码
      *

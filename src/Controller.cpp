@@ -45,6 +45,7 @@ Controller::Controller() {
         Person* person = Person::load(p.path().string());
         if (person != nullptr) this->addPerson(person);
     }
+
     for (auto& p : std::filesystem::directory_iterator(EXPRESS_DIR)) {
         Express* express = Express::load(p.path().string());
         if (express != nullptr) this->addExpress(express);
@@ -93,9 +94,28 @@ void Controller::loginUser() {
         currentPerson = personMap[username];
         cout << "登录成功! 欢迎你，亲爱的" << currentPerson->getNickname()
              << endl;
+        switch (currentPerson->getType()) {
+            case PersonType::USER:
+                currentUser = dynamic_cast<User*>(currentPerson);
+                break;
+            case PersonType::ADMIN:
+                currentAdmin = dynamic_cast<Admin*>(currentPerson);
+                break;
+        }
     } else {
         cout << "密码错误，已退出" << endl;
     }
+};
+
+void Controller::logoutUser() {
+    if (currentPerson == nullptr) {
+        cout << "当前没有用户登录，无法退出" << endl;
+        return;
+    }
+    cout << "欢迎下次光临，亲爱的" << currentPerson->getNickname() << endl;
+    currentPerson = nullptr;
+    currentUser = nullptr;
+    currentAdmin = nullptr;
 };
 
 void Controller::changePassword() {
@@ -167,7 +187,44 @@ void Controller::sendExpress() {
     this->addExpress(new Express(currentPerson->getUsername(), receiver));
 };
 
-void Controller::receiveExpress(){};
+void Controller::receiveExpress() {
+    if (currentPerson == nullptr) {
+        cout << "请先登录" << endl;
+        return;
+    }
+    if (currentPerson->getType() != PersonType::USER) {
+        cout << "你不是用户，不能接收快递" << endl;
+        return;
+    }
+    auto list = currentUser->getExpressList(true, false);
+    if (!list.size()) {
+        cout << "没有找到可接收的快递" << endl;
+        return;
+    }
+    for (auto express : list) {
+        cout << express->toString() << endl;
+    }
+    cout << "你想接收的快递是：";
+    string expressId;
+    cin >> expressId;
+    int cnt = 0;
+    while (expressMap.find(expressId) == expressMap.end()) {
+        cout << "输入错误，请重新输入" << endl;
+        cin >> expressId;
+
+        if (++cnt > 3) {
+            cout << "输入错误次数过多" << endl;
+            return;
+        }
+    }
+    auto express = expressMap[expressId];
+    if (express->getReceiver() != currentPerson->getUsername()) {
+        cout << "你不是收件人，不能接收快递" << endl;
+        return;
+    }
+    express->Receive();
+    cout << "收件成功！" << endl;
+};
 
 void Controller::queryExpress(){};
 

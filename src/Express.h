@@ -1,9 +1,10 @@
 #pragma once
 #include <ctime>
 #include <fstream>
+#include <set>
 #include <string>
-
 using std::ifstream;
+using std::set;
 using std::string;
 
 const string EXPRESS_DIR = "./data/express/";
@@ -16,7 +17,7 @@ enum class ExpressState {
     // WAITING,
     // SENDING,
     /**
-     * @brief 待签收
+     * @brief 已发送
      *
      */
     SENT,
@@ -24,8 +25,11 @@ enum class ExpressState {
      * @brief 已签收
      *
      */
-    RECEIVED
+    RECEIVED,
 };
+
+const set<ExpressState> ALL_EXPRESS_STATES{ExpressState::SENT,
+                                           ExpressState::RECEIVED};
 
 /**
  * @brief 快递类
@@ -113,4 +117,5 @@ class Express {
     string getReceiver();
     string getDescription();
     string getExpressId();
+    string toString();
 };
