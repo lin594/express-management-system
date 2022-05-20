@@ -42,8 +42,8 @@ Express::Express(ifstream& in) {
     int _state;
     in >> _state;
     this->state = (ExpressState)_state;
-    in >> expressId >> sendTime >> receiveTime >> sender >> receiver >>
-        description;
+    in >> expressId >> sendTime >> receiveTime >> sender >> receiver;
+    getline(in, description);
 }
 
 Express* Express::load(string file) {

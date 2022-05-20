@@ -26,7 +26,7 @@ User::User() { this->type = PersonType::USER; }
  */
 User::User(ifstream& in) : Person(in) {
     in >> this->telephone;
-    in >> this->address;
+    getline(in, this->address);
 }
 
 /**
