@@ -319,6 +319,45 @@ set<ExpressState> inputExpressStates(string information) {
     return states;
 }
 
+/**
+ * @brief 输入日期
+ *
+ * @param information 提示信息
+ * @return time_t 时间戳，无效则返回0
+ */
+time_t inputDate(string information) {
+    string input;
+    cout << information << "(yyyy-mm-dd)[回车默认为不限制]";
+    int cnt = 0;
+    while (true) {
+        if (++cnt > 3) {
+            cout << "输入错误次数过多，已默认为不限制" << endl;
+            return 0;
+        }
+        getline(cin, input);
+        if (input.empty()) return 0;
+        if (input.length() != 10) {
+            cout << "输入错误，请重新输入" << endl;
+            continue;
+        }
+        if (input[4] != '-' || input[7] != '-') {
+            cout << "输入错误，请重新输入" << endl;
+            continue;
+        }
+        for (int i = 0; i < 10; i++) {
+            if (i == 4 || i == 7) continue;
+            if (input[i] < '0' || input[i] > '9') {
+                cout << "输入错误，请重新输入" << endl;
+                continue;
+            }
+        }
+        break;
+    }
+    struct tm tm;
+    strptime(input.c_str(), "%Y-%m-%d", &tm);
+    return mktime(&tm);
+}
+
 void Controller::queryExpress() {
     if (currentPerson == nullptr) {
         cout << "请先登录" << endl;
@@ -335,15 +374,20 @@ void Controller::queryExpress() {
     string expressId = "";
     if (inputYesNo("是否查询特定快递编号?"))
         expressId = this->inputExpressId("请输入快递编号:");
+    time_t startTime = inputDate("请输入起始发件时间:");
+    time_t endTime = inputDate("请输入结束发件时间");
+
     vector<Express*> list;
     if (send) {
-        auto&& sendList = this->getExpressList("", currentPerson->getUsername(),
-                                               expressId, states, 0, 0);
+        auto&& sendList =
+            this->getExpressList("", currentPerson->getUsername(), expressId,
+                                 states, startTime, endTime);
         list.insert(list.end(), sendList.begin(), sendList.end());
     }
     if (receive) {
-        auto&& receiveList = this->getExpressList(currentPerson->getUsername(),
-                                                  "", expressId, states, 0, 0);
+        auto&& receiveList =
+            this->getExpressList(currentPerson->getUsername(), "", expressId,
+                                 states, startTime, endTime);
         list.insert(list.end(), receiveList.begin(), receiveList.end());
     }
     for (auto express : list) {
