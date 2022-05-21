@@ -72,3 +72,14 @@ void User::addSendExpress(Express* express) {
 void User::addReceiveExpress(Express* express) {
     this->receiveExpressList.push_back(express);
 }
+
+string User::toDetailString() {
+    string str = "";
+    str += "用户名：" + this->username + "\n";
+    str += "用户类型：普通用户\n";
+    str += "姓名：" + this->nickname + "\n";
+    str += "余额：" + std::to_string(this->balance) + "\n";
+    str += "电话：" + this->telephone + "\n";
+    str += "地址：" + this->address + "\n";
+    return str;
+}

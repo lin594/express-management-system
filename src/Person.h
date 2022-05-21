@@ -67,9 +67,22 @@ class Person {
      * @return Person*
      */
     static Person* load(string file);
+    /**
+     * @brief 简要信息
+     *
+     * @return string 简要信息
+     */
+    string toString();
+    /**
+     * @brief 具体信息
+     *
+     * @return string 具体信息
+     */
+    virtual string toDetailString() = 0;
 
     Person(ifstream& in);
     Person() = default;
+
     ////////////////////////////////////////////////////////////////////////////////
     // Getter and Setter
     ////////////////////////////////////////////////////////////////////////////////

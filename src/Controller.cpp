@@ -401,7 +401,28 @@ void Controller::queryExpress() {
     }
 };
 
-void Controller::queryUserInfo(){};
+void Controller::queryUserInfo() {
+    if (currentPerson == nullptr) {
+        cout << "请先登录" << endl;
+        return;
+    }
+    if (currentPerson->getType() != PersonType::ADMIN) {
+        cout << "你不是管理员，不能通过管理员接口查询用户信息" << endl;
+        return;
+    }
+    cout << "Type\tUsername\tNickname\tBalance" << endl;
+    for (auto person : this->personList) {
+        cout << person->toString() << endl;
+    }
+    cout << "共找到" << this->personList.size() << "条用户信息" << endl;
+
+    if (inputYesNo("是否需要查询具体用户信息？")) {
+        string username = this->inputUsername("请输入用户名:");
+        if (username.empty()) return;
+        auto&& person = personMap[username];
+        cout << person->toDetailString() << endl;
+    }
+};
 
 void Controller::queryExpressInfo() {
     if (currentPerson == nullptr) {

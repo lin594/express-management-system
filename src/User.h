@@ -26,6 +26,7 @@ class User : public Person {
      *
      */
     void save() override;
+
     /**
      * @brief 发送快递列表
      *
@@ -38,6 +39,12 @@ class User : public Person {
     vector<Express*> receiveExpressList;
 
    public:
+    /**
+     * @brief 用户具体信息
+     *
+     * @return string 用户具体信息
+     */
+    string toDetailString() override;
     void addSendExpress(Express* express);
     void addReceiveExpress(Express* express);
 

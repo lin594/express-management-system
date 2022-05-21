@@ -76,3 +76,28 @@ Person* Person::load(string file) {
     }
     return person;
 }
+
+/**
+ * @brief 用户基本信息
+ * 包括用户类型、用户名、姓名、余额等信息
+ * @return string 用户基本信息
+ */
+string Person::toString() {
+    string str = "";
+    switch (type) {
+        case PersonType::USER:
+            str += "USER";
+            break;
+        case PersonType::ADMIN:
+            str += "ADMIN";
+            break;
+        default:
+            str += "UNKNOWN";
+            break;
+    }
+    str += '\t';
+    str += username + '\t';
+    str += nickname + '\t';
+    str += std::to_string(balance);
+    return str;
+}
