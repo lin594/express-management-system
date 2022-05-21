@@ -79,6 +79,16 @@ class Controller {
      * @return string 快递单号（失败返回空）
      */
     string inputExpressId(string information = "", int failCnt = 3);
+    /**
+     * @brief 用户菜单
+     *
+     */
+    void UserMenu();
+    /**
+     * @brief 管理员菜单
+     *
+     */
+    void AdminMenu();
 
    public:
     /**

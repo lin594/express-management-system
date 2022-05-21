@@ -6,9 +6,107 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+void Controller::UserMenu() {
+    cout << "1.修改账户密码" << endl;
+    cout << "2.查询用户信息" << endl;
+    cout << "3.查询余额信息" << endl;
+    cout << "4.充值" << endl;
+    cout << "5.查询快递信息" << endl;
+    cout << "6.发送快递" << endl;
+    cout << "7.接收快递" << endl;
+    cout << "8.退出登录" << endl;
+    string choice;
+    cin >> choice;
+    if (choice.length() > 1) choice = "x";
+    switch (choice[0]) {
+        case '1':
+            this->changePassword();
+            break;
+        case '2':
+            cout << currentUser->toDetailString() << endl;
+            break;
+        case '3':
+            this->queryBalance();
+            break;
+        case '4':
+            this->recharge();
+            break;
+        case '5':
+            this->queryExpress();
+            break;
+        case '6':
+            this->sendExpress();
+            break;
+        case '7':
+            this->receiveExpress();
+            break;
+        case '8':
+            this->logoutUser();
+        default:
+            cout << "输入错误，请重新输入\n";
+            break;
+    }
+};
+void Controller::AdminMenu() {
+    cout << "1.查询用户信息" << endl;
+    cout << "2.修改账户密码" << endl;
+    cout << "3.查询快递信息" << endl;
+    cout << "4.退出登录" << endl;
+    string choice;
+    cin >> choice;
+    if (choice.length() > 1) choice = "x";
+    switch (choice[0]) {
+        case '1':
+            this->queryUserInfo();
+            break;
+        case '2':
+            this->changePassword();
+            break;
+        case '3':
+            this->queryExpressInfo();
+            break;
+        case '4':
+            this->logoutUser();
+        default:
+            cout << "输入错误，请重新输入\n";
+            break;
+    }
+};
+
 void Controller::run() {
     cout << "系统内现在共有" << personList.size() << "个用户" << endl;
     cout << "系统内现在共有" << expressList.size() << "个快递" << endl;
+    while (true) {
+        try {
+            if (currentPerson == nullptr) {
+                cout << "请选择想要的操作：\n";
+                cout << "1. 登录\n";
+                cout << "2. 注册\n";
+                cout << "3. 退出\n";
+                string choice;
+                cin >> choice;
+                if (choice.length() > 1) choice = "x";
+                switch (choice[0]) {
+                    case '1':
+                        this->loginUser();
+                        break;
+                    case '2':
+                        this->registerUser();
+                        break;
+                    case '3':
+                        return;
+                    default:
+                        cout << "输入错误，请重新输入\n";
+                        break;
+                }
+            } else if (currentUser != nullptr)
+                UserMenu();
+            else if (currentAdmin != nullptr)
+                AdminMenu();
+        } catch (std::exception& e) {
+            cout << e.what() << endl;
+        }
+    }
 }
 
 void Controller::addPerson(Person* person) {
