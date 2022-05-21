@@ -403,4 +403,35 @@ void Controller::queryExpress() {
 
 void Controller::queryUserInfo(){};
 
-void Controller::queryExpressInfo(){};
+void Controller::queryExpressInfo() {
+    if (currentPerson == nullptr) {
+        cout << "请先登录" << endl;
+        return;
+    }
+    if (currentPerson->getType() != PersonType::ADMIN) {
+        cout << "你不是管理员，不能通过管理员接口查询快递" << endl;
+        return;
+    }
+    string sender = "";
+    if (inputYesNo("是否查询特定发件人？"))
+        sender = this->inputUsername("请输入发件人:");
+    string receiver = "";
+    if (inputYesNo("是否查询特定收件人？"))
+        receiver = this->inputUsername("请输入收件人:");
+    set<ExpressState> states = inputExpressStates("是否查询特定状态的快递？");
+    string expressId = "";
+    if (inputYesNo("是否查询特定快递编号?"))
+        expressId = this->inputExpressId("请输入快递编号:");
+    time_t startTime = inputDate("请输入起始发件时间:");
+    time_t endTime = inputDate("请输入结束发件时间");
+    auto&& list = this->getExpressList(sender, receiver, expressId, states,
+                                       startTime, endTime);
+    for (auto express : list) {
+        cout << express->toString() << endl;
+    }
+    if (list.size() == 0) {
+        cout << "没有找到符合条件的快递" << endl;
+    } else {
+        cout << "共找到" << list.size() << "条符合条件的快递" << endl;
+    }
+};
