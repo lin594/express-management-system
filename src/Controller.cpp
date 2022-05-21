@@ -6,6 +6,11 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+void Controller::run() {
+    cout << "系统内现在共有" << personList.size() << "个用户" << endl;
+    cout << "系统内现在共有" << expressList.size() << "个快递" << endl;
+}
+
 void Controller::addPerson(Person* person) {
     personList.push_back(person);
     personMap[person->getUsername()] = person;
@@ -35,9 +40,20 @@ string Controller::inputUsername(string infomation) {
     return username;
 }
 
-void Controller::run() {
-    cout << "系统内现在共有" << personList.size() << "个用户" << endl;
-    cout << "系统内现在共有" << expressList.size() << "个快递" << endl;
+string Controller::inputExpressId(string information, int failCnt) {
+    cout << information;
+    string expressId = "";
+    cin >> expressId;
+    int cnt = 0;
+    while (expressMap.find(expressId) == expressMap.end()) {
+        if (++cnt > failCnt) {
+            cout << "输入错误次数过多，已退出" << endl;
+            break;
+        }
+        cout << "快递不存在，请重新输入快递号:";
+        cin >> expressId;
+    }
+    return expressId;
 }
 
 Controller::Controller() {
@@ -196,7 +212,7 @@ void Controller::receiveExpress() {
         cout << "你不是用户，不能接收快递" << endl;
         return;
     }
-    auto list = currentUser->getExpressList(true, false);
+    auto list = currentUser->getReceiveExpressList();
     if (!list.size()) {
         cout << "没有找到可接收的快递" << endl;
         return;
@@ -226,7 +242,130 @@ void Controller::receiveExpress() {
     cout << "收件成功！" << endl;
 };
 
-void Controller::queryExpress(){};
+/**
+ * @brief 输入一个bool值
+ *
+ * 默认为false
+ *
+ * @param information 提示信息
+ * @return true 输入为true
+ * @return false 输入为false或默认
+ */
+bool inputYesNo(string information) {
+    string input;
+    cout << information << "[y/N]";
+    getline(cin, input);
+    while (true) {
+        if (input == "y" || input == "Y") {
+            return true;
+        } else if (input == "n" || input == "N") {
+            return false;
+        } else if (input.empty()) {
+            return false;
+        } else {
+            cout << "输入错误，请重新输入" << endl;
+            getline(cin, input);
+        }
+    }
+}
+
+/**
+ * @brief 获取符合条件的快递列表
+ *
+ * @param receiver 接收人，如果为空则查找所有
+ * @param sender 发送人，如果为空则查找所有
+ * @param expressId 快递单号，如果为空则查找所有
+ * @param states 快递状态，默认全部
+ * @param startTime 起始发件时间，如果为0则查找所有
+ * @param endTime 结束发件时间，如果为0则查找所有
+ * @return vector<Express*> 符合条件的快递列表
+ */
+vector<Express*> Controller::getExpressList(const string receiver,
+                                            const string sender,
+                                            const string expressId,
+                                            const set<ExpressState> states,
+                                            const time_t startTime,
+                                            const time_t endTime) {
+    vector<Express*> result;
+    for (auto express : this->expressList) {
+        if (!receiver.empty() && express->getReceiver() != receiver) continue;
+        if (!sender.empty() && express->getSender() != sender) continue;
+        if (!expressId.empty() && express->getExpressId() != expressId)
+            continue;
+        if (states.count(express->getState()) == 0) continue;
+        if (startTime && express->getSendTime() < startTime) continue;
+        if (endTime && express->getSendTime() > endTime) continue;
+        result.push_back(express);
+    }
+    return result;
+}
+
+/**
+ * @brief 输入快递状态集合
+ *
+ * @param information 提示信息
+ * @return set<ExpressState> 快递状态集合
+ */
+set<ExpressState> inputExpressStates(string information) {
+    set<ExpressState> states;
+    string input;
+    cout << information << "[SENT,RECEIVED]";
+    while (true) {
+        getline(cin, input);
+        if (!input.length()) return ALL_EXPRESS_STATES;
+        std::stringstream ss(input);
+        string state;
+        while (getline(ss, state, ',')) {
+            if (state == "SENT") {
+                states.insert(ExpressState::SENT);
+            } else if (state == "RECEIVED") {
+                states.insert(ExpressState::RECEIVED);
+            } else {
+                cout << "输入错误，请重新输入" << endl;
+                states.clear();
+            }
+        }
+        break;
+    }
+    return states;
+}
+
+void Controller::queryExpress() {
+    if (currentPerson == nullptr) {
+        cout << "请先登录" << endl;
+        return;
+    }
+    if (currentPerson->getType() != PersonType::USER) {
+        cout << "你不是用户，不能通过用户接口查询快递" << endl;
+        return;
+    }
+    cin.ignore();
+    bool send = inputYesNo("是否查询发件记录？");
+    bool receive = inputYesNo("是否查询收件记录？");
+    set<ExpressState> states = inputExpressStates("是否查询特定状态的快递？");
+    string expressId = "";
+    if (inputYesNo("是否查询特定快递编号?"))
+        expressId = this->inputExpressId("请输入快递编号:");
+    vector<Express*> list;
+    if (send) {
+        auto&& sendList = this->getExpressList("", currentPerson->getUsername(),
+                                               expressId, states, 0, 0);
+        list.insert(list.end(), sendList.begin(), sendList.end());
+    }
+    if (receive) {
+        auto&& receiveList = this->getExpressList(currentPerson->getUsername(),
+                                                  "", expressId, states, 0, 0);
+        list.insert(list.end(), receiveList.begin(), receiveList.end());
+    }
+    for (auto express : list) {
+        cout << express->toString() << endl;
+    }
+    if (list.size() == 0) {
+        cout << "没有找到符合条件的快递" << endl;
+    } else {
+        cout << "共找到" << list.size() << "条符合条件的快递" << endl;
+    }
+};
 
 void Controller::queryUserInfo(){};
 

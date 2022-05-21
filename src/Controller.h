@@ -69,6 +69,12 @@ class Controller {
      */
     string inputUsername(string information = "");
 
+    /**
+     * @brief 输入合法快递单号
+     *
+     */
+    string inputExpressId(string information = "", int failCnt = 3);
+
    public:
     /**
      * @brief Construct a new Controller object
@@ -85,6 +91,12 @@ class Controller {
      * （其实是个死循环，监听各类操作
      */
     void run();
+
+    vector<Express*> getExpressList(
+        const string receiver = "", const string sender = "",
+        const string expressId = "",
+        const set<ExpressState> states = ALL_EXPRESS_STATES,
+        const time_t startTime = 0, const time_t endTime = 0);
 
     //////////////////////////////////////////////////////////////////////////////
     // User 区

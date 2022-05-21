@@ -43,6 +43,7 @@ Express::Express(ifstream& in) {
     in >> _state;
     this->state = (ExpressState)_state;
     in >> expressId >> sendTime >> receiveTime >> sender >> receiver;
+    in.ignore();
     getline(in, description);
 }
 
@@ -100,7 +101,8 @@ string Express::toString() {
     }
     str += "\n";
     str += "寄送时间: " + string(ctime(&sendTime));
-    str += "接收时间: " + string(ctime(&receiveTime));
+    str += "接收时间: " +
+           (receiveTime ? string(ctime(&receiveTime)) : "（未接收）\n");
     str += "寄件人: " + sender + "\n";
     str += "收件人: " + receiver + "\n";
     str += "物品描述: " + description + "\n";
