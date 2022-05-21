@@ -220,19 +220,8 @@ void Controller::receiveExpress() {
     for (auto express : list) {
         cout << express->toString() << endl;
     }
-    cout << "你想接收的快递是：";
-    string expressId;
-    cin >> expressId;
-    int cnt = 0;
-    while (expressMap.find(expressId) == expressMap.end()) {
-        cout << "输入错误，请重新输入" << endl;
-        cin >> expressId;
-
-        if (++cnt > 3) {
-            cout << "输入错误次数过多" << endl;
-            return;
-        }
-    }
+    string expressId = this->inputExpressId("你想接收的快递是：");
+    if (expressId.empty()) return;
     auto express = expressMap[expressId];
     if (express->getReceiver() != currentPerson->getUsername()) {
         cout << "你不是收件人，不能接收快递" << endl;
