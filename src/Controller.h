@@ -3,6 +3,7 @@
 
 #include "Express/Express.h"
 #include "Person/People.h"
+#include "Scene.h"
 using std::map;
 using std::vector;
 /**
@@ -50,6 +51,18 @@ class Controller {
     Admin* currentAdmin = nullptr;
 
     /**
+     * @brief 当前场景
+     *
+     */
+    Scene* currentScene;
+
+    /**
+     * @brief 程序是否需要关闭
+     *
+     */
+    bool shouldClose = false;
+
+    /**
      * @brief 增加用户
      *
      */
@@ -77,16 +90,22 @@ class Controller {
      * @return string 快递单号（失败返回空）
      */
     string inputExpressId(string information = "", int failCnt = 3);
+
     /**
-     * @brief 用户菜单
+     * @brief 默认场景
      *
      */
-    void UserMenu();
+    void switchDefualtScene();
     /**
-     * @brief 管理员菜单
+     * @brief 普通用户场景
      *
      */
-    void AdminMenu();
+    void switchUserScene();
+    /**
+     * @brief 管理员场景
+     *
+     */
+    void switchAdminScene();
 
    public:
     /**
