@@ -156,11 +156,22 @@ string Controller::inputExpressId(string information, int failCnt) {
 }
 
 Controller::Controller() {
+    auto&& path = std::filesystem::path(USER_DIR).parent_path();
+    if (!std::filesystem::exists(path)) {
+        std::filesystem::create_directories(path);
+    }
+
+    if (!std::filesystem::exists(USER_DIR)) {
+        std::filesystem::create_directory(USER_DIR);
+    }
     for (auto& p : std::filesystem::directory_iterator(USER_DIR)) {
         Person* person = Person::load(p.path().string());
         if (person != nullptr) this->addPerson(person);
     }
 
+    if (!std::filesystem::exists(EXPRESS_DIR)) {
+        std::filesystem::create_directory(EXPRESS_DIR);
+    }
     for (auto& p : std::filesystem::directory_iterator(EXPRESS_DIR)) {
         Express* express = Express::load(p.path().string());
         if (express != nullptr) this->addExpress(express);

@@ -4,7 +4,7 @@
 using std::ifstream;
 using std::string;
 
-const string USER_DIR = "./data/user/";
+extern string USER_DIR;
 
 /**
  * @brief 用户类型

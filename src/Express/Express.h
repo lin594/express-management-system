@@ -7,8 +7,7 @@
 
 using std::ifstream;
 using std::string;
-
-const string EXPRESS_DIR = "./data/express/";
+extern string EXPRESS_DIR;
 
 /**
  * @brief 快递类
