@@ -25,30 +25,31 @@ void Controller::addExpress(Express* express) {
         ->addReceiveExpress(express);
 }
 
-string Controller::inputUsername(string infomation) {
+string Controller::inputUsername(string infomation, int failCnt) {
     cout << infomation;
-    string username = "";
+    string username;
     cin >> username;
     int cnt = 0;
     while (personMap.find(username) == personMap.end()) {
+        if (++cnt > failCnt) {
+            cout << "输入错误次数过多，已退出" << endl;
+            return "";
+        }
         cout << "用户名不存在，请重新输入用户名:";
         cin >> username;
-        if (++cnt > 3) {
-            cout << "输入错误次数过多，已退出" << endl;
-        }
     }
     return username;
 }
 
 string Controller::inputExpressId(string information, int failCnt) {
     cout << information;
-    string expressId = "";
+    string expressId;
     cin >> expressId;
     int cnt = 0;
     while (expressMap.find(expressId) == expressMap.end()) {
         if (++cnt > failCnt) {
             cout << "输入错误次数过多，已退出" << endl;
-            break;
+            return "";
         }
         cout << "快递不存在，请重新输入快递号:";
         cin >> expressId;
@@ -102,7 +103,7 @@ void Controller::registerUser() {
 void Controller::loginUser() {
     cout << "下面开始登录用户。" << endl;
     string username = this->inputUsername("请输入用户名:");
-    if (!username.length()) return;
+    if (username.empty()) return;
     cout << "请输入密码:";
     string password;
     cin >> password;
@@ -301,7 +302,7 @@ set<ExpressState> inputExpressStates(string information) {
     cout << information << "[SENT,RECEIVED]";
     while (true) {
         getline(cin, input);
-        if (!input.length()) return ALL_EXPRESS_STATES;
+        if (input.empty()) return ALL_EXPRESS_STATES;
         std::stringstream ss(input);
         string state;
         while (getline(ss, state, ',')) {

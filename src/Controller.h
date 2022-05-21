@@ -65,13 +65,18 @@ class Controller {
     /**
      * @brief 输入合法用户名
      *
-     * @return string 用户名
+     * @param information 提示信息
+     * @param failCnt 最大错误次数
+     * @return string 用户名（失败返回空）
      */
-    string inputUsername(string information = "");
+    string inputUsername(string information = "", int failCnt = 3);
 
     /**
      * @brief 输入合法快递单号
      *
+     * @param information 提示信息
+     * @param failCnt 最大错误次数
+     * @return string 快递单号（失败返回空）
      */
     string inputExpressId(string information = "", int failCnt = 3);
 
